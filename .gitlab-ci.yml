@@ -1,0 +1,32 @@
+include:
+  - project: "basworld/templates/pipelines"
+    ref: "v1.3.1"
+    file: "backend/api/template.yml"
+  - project: "basworld/templates/pipelines"
+    ref: "v1.3.1"
+    file: "backend/jobs/feature-tests.yml"
+  - project: "basworld/templates/pipelines"
+    ref: "v1.3.1"
+    file: "backend/jobs/mutation-tests.yml"
+
+variables:
+  ENABLE_AUTO_REVIEW: "false"
+  ALLOW_FAILURE_STATIC_ANALYSIS: "true"
+  SERVICE_NAME: "pim-api"
+  ECR_REPOSITORY: "976562007428.dkr.ecr.eu-central-1.amazonaws.com"
+  CI_PIPELINE_IMAGE: "gitlab.bastrucks.com:5050/basworld/pim/api/ci:2.0.0"
+
+Feature Tests:
+  image: $CI_PIPELINE_IMAGE
+  services:
+    - name: gitlab.bastrucks.com:5050/basworld/pim/api/mongo:latest
+      alias: pim-mongodb-server
+  before_script:
+    - cp .env.ci .env
+    - php artisan key:generate
+    - php artisan migrate
+    - php artisan db:seed
+  script:
+    - composer feature-test
+    - bin/feature-test-coverage
+

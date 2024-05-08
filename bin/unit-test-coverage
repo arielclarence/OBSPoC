@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+UNIT_COVERAGE=$(grep -E '^\s*Total:' unit-coverage.txt | sed -e 's/.*Total: *\([0-9]*\)\..*/\1/')
+
+if [ "$UNIT_COVERAGE" -lt 0 ]; then
+  echo "The code coverage is below 85, Please make sure your code changes have 100% code coverage";
+  echo "Overall coverage is $UNIT_COVERAGE";
+  exit 1;
+else
+  echo "Passed, Overall coverage is $UNIT_COVERAGE"
+fi

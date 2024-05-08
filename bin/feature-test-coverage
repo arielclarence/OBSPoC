@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+FEATURE_COVERAGE=$(grep -E '^\s*Total:' feature-coverage.txt | sed -e 's/.*Total: *\([0-9]*\)\..*/\1/')
+
+if [ "$FEATURE_COVERAGE" -lt 0 ]; then
+  echo "The code coverage is below 100, Please make sure your code changes have 100% code coverage";
+  echo "Overall coverage is $FEATURE_COVERAGE";
+  exit 1;
+else
+  echo "Passed, Overall coverage is $FEATURE_COVERAGE"
+fi
