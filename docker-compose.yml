@@ -1,38 +1,44 @@
 version: "3.8"
 services:
-    boilerplate-service:
-        build:
-            dockerfile: Dockerfile
+    mysql:
+        image: mysql:8.4.0
+        container_name: boilerplate-api-mysql
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-boilerplate}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-boilerplate}
+        volumes:
+            - ./docker/application/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./docker/application/mysql/data:/var/lib/mysql
+        ports:
+            - ${MYSQL_PORT:-3309}:3306
+        networks:
+            - boilerplate_api_network
+        restart: unless-stopped
+
+
+    boilerplate-api:
+        image: gitlab.bastrucks.com:5050/basworld/boilerplates/api/dev:1.0.0
         container_name: boilerplate-api
         ports:
             - ${NGINX_PORT:-8088}:80
-            - ${NGINX_SSL_PORT:-8089}:443
-        volumes:
-            - .:/var/www/html
-        networks:
-            shared_network:
-                aliases:
-                    - boilerplate-api.bas.localhost
-            boilerplate_api_network:
-        restart: "no"
-        labels:
-            - "traefik.http.routers.http-boilerplate-api.rule=Host(`boilerplate-api.bas.localhost`)"
-            - "traefik.http.routers.boilerplate-api.entrypoints=websecure"
-            - "traefik.http.routers.boilerplate-api.rule=Host(`boilerplate-api.bas.localhost`)"
-            - "traefik.http.routers.boilerplate-api.tls=true"
-    mysqldb-server:
-        build:
-            dockerfile: ./docker/webserver/mysql.Dockerfile
-        container_name: boilerplate-database
-        networks:
-            - default
-            - shared_network
-        ports:
-            - ${DATABASE_SERVER_PORT:-3307}:3306
+            - ${NGINX_SSL_PORT:-4445}:443
         restart: unless-stopped
+        labels:
+            - "traefik.http.routers.http-boilerplate-api.rule=Host(`boilerplate.bas.localhost`)"
+            - "traefik.http.routers.boilerplate-api.entrypoints=websecure"
+            - "traefik.http.routers.boilerplate-api.rule=Host(`boilerplate.bas.localhost`)"
+            - "traefik.http.routers.boilerplate-api.tls=true"
+        networks:
+            - shared_network
+            - boilerplate_api_network
+        volumes:
+            - ./:/var/www/html
+
 networks:
     shared_network:
         external: true
         name: bas_shared_network
     boilerplate_api_network:
         driver: bridge
+volumes:
+    mysql_data:

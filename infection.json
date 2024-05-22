@@ -1,0 +1,26 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "app"
+        ],
+        "excludes": [
+            "app/Console",
+            "app/Providers"
+        ]
+    },
+    "phpUnit": {
+        "configDir": ""
+    },
+    "logs": {
+        "text": "tests/build/logs/infection/infection.log",
+        "html": "tests/build/logs/infection/infection.html",
+        "summary": "tests/build/logs/infection/summary.log",
+        "json": "tests/build/logs/infection/infection-log.json",
+        "perMutator": "tests/build/logs/infection/per-mutator.md",
+        "github": false
+    },
+    "mutators": {
+        "@default": true
+    }
+}

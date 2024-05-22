@@ -1,0 +1,21 @@
+{
+    "preset": "per",
+    "rules": {
+        "concat_space": {
+            "spacing": "one"
+        },
+        "return_type_declaration": {
+            "space_before": "none"
+        },
+        "void_return": true,
+        "declare_strict_types": true,
+        "declare_parentheses": true,
+        "whitespace_after_comma_in_array": {
+            "ensure_single_space": true
+        },
+        "function_declaration": {
+            "closure_function_spacing": "none"
+        },
+        "not_operator_with_successor_space": false
+    }
+}

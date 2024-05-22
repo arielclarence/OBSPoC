@@ -1,9 +1,7 @@
+cp .env.example .env
+echo "APACHE_USER=$(whoami)" >> .env
+echo "USER_ID=$(id -u)" >> .env
+echo "COMPOSE_PROJECT_NAME=boilerplate" >> .env
+
+docker-compose build
 docker-compose up -d
-
-sleep 10
-
-docker-compose exec pim-service php artisan key:generate
-# Create bas user for mongo
-docker-compose exec pim-mongodb-server mongo -u root -p root \
-    --authenticationDatabase admin pim \
-    --eval 'if (db.getUser("bas") == null){db.createUser({user:"bas",pwd:"bas",roles:[{role:"readWrite",db:"pim"}]})}'
