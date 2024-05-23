@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', static function() {
     return response()->json([
         "code" => Response::HTTP_OK,
-        "message" => "Health Check for PIM API is successful"
+        "message" => "Health Check for PIM API is successful",
     ]);
 });
 
