@@ -1,5 +1,8 @@
 {
     "preset": "per",
+    "exclude": [
+        "bootstrap"
+    ],
     "rules": {
         "concat_space": {
             "spacing": "one"
@@ -17,7 +20,7 @@
             "closure_function_spacing": "none"
         },
         "not_operator_with_successor_space": false,
-        "trailing_comma_in_multiline":  true,
-        "single_blank_line_at_eof": true
+        "single_blank_line_at_eof": true,
+        "trailing_comma_in_multiline":  true
     }
 }
