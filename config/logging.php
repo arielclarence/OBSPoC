@@ -12,40 +12,6 @@ use BAS\LogzIo\Formatter\LogzIoFormatter;
 use BAS\LogzIo\Enum\Host;
 use Monolog\Level;
 
-$logz = [
-    'driver' => 'monolog',
-    'tap' => [Factory::class],
-    'handler' => LogzIoHandler::class,
-    'with' => [
-        'token' => env('LOGZ_TOKEN', ''),
-        'type' => 'json',
-        'ssl' => true,
-        'host' => Host::EuCentral1,
-        'bubble' => true,
-        'level' => Level::fromName(env('LOG_LEVEL')) ?? Level::Info,
-    ],
-    'formatter' => LogzIoFormatter::class,
-];
-
-$fallback = [
-    'driver' => 'single',
-    'tap' => [Factory::class],
-    'path' => storage_path('logs/logz-fallback.log'),
-    'level' => env('LOG_LEVEL', 'info'),
-    'formatter' => LogzIoFormatter::class,
-];
-
-$stdout = [
-    'driver' => 'monolog',
-    'handler' => StreamHandler::class,
-    'tap' => [Factory::class],
-    'formatter' => JsonFormatter::class,
-    'with' => [
-        'stream' => 'php://stdout',
-    ],
-    'level' => env('LOG_LEVEL', 'info'),
-];
-
 return [
 
     /*
@@ -169,8 +135,29 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-        'stdout' => $stdout,
-
-        'logz' => env('LOGZ_TOKEN') ? $logz : $fallback,
+        'stdout' => [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'tap' => [Factory::class],
+            'formatter' => JsonFormatter::class,
+            'with' => [
+                'stream' => 'php://stdout',
+            ],
+            'level' => env('LOG_LEVEL', 'info'),
+        ],
+        'logz' => [
+            'driver' => 'monolog',
+            'tap' => [Factory::class],
+            'handler' => LogzIoHandler::class,
+            'with' => [
+                'token' => env('LOGZ_TOKEN', ''),
+                'type' => 'json',
+                'ssl' => true,
+                'host' => Host::EuCentral1,
+                'bubble' => true,
+                'level' => Level::fromName(env('LOG_LEVEL')) ?? Level::Info,
+            ],
+            'formatter' => LogzIoFormatter::class,
+        ],
     ],
 ];

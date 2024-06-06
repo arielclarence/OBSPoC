@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\JsonResponse;
-use App\Http\Middleware\TransactionIdMiddleware;
+use BAS\Log\Http\Middleware\TransactionIdMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Sentry\Laravel\Integration;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -19,9 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function(Middleware $middleware): void {
         $middleware->api(append: [
             TransactionIdMiddleware::class,
-            JsonResponse::class,
         ]);
     })
     ->withExceptions(function(Exceptions $exceptions): void {
         Integration::handles($exceptions);
+
+        $exceptions->shouldRenderJsonWhen(function(Request $request, Throwable $e) {
+            return $request->expectsJson();
+        });
     })->create();

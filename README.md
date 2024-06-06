@@ -1,8 +1,8 @@
-# Boilerplate API
+# API Boilerplate
 
 ## Introduction
 
-Boilerplate Api the backend service crafted using Laravel 11 framework. Data is stored in
+API Boilerplate is the backend service crafted using Laravel 11 framework.
 
 
 ## Packages
@@ -35,10 +35,10 @@ During the initialization, a port conflict error may occur if you are using a re
 ./docker/init.sh
 ```
 
-## Accessing Boilerplate API Locally
+## Accessing API Boilerplate Locally
 You can access your application locally by navigating to the URL `https://boilerplate.bas.localhost`
 
-## Accessing Boilerplate API  Documentation Locally
+## Accessing API Boilerplate Documentation Locally
 You can access your application API documentation locally by navigating to the URL
-`https://boilerplate.bas.localhostt/api/documentation`
+`https://boilerplate.bas.localhost/api/documentation`
 

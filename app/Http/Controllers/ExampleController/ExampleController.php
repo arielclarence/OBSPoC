@@ -18,7 +18,7 @@ class ExampleController extends BaseController
      * summary="Show example",
      * description="Description",
      * operationId="exampleIndex",
-     * tags={"Schema"},
+     * tags={"Example"},
      * security={ {"bearer": {} }},
      * @OA\Response(
      *   response=200,
