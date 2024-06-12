@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+    mysql:
+        image: mysql:8.4.0
+        container_name: boilerplate-api-mysql
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-boilerplate}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-boilerplate}
+        volumes:
+            - ./docker/application/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - mysql_data:/var/lib/mysql
+        ports:
+            - ${MYSQL_PORT:-3309}:3306
+        networks:
+            - boilerplate_api_network
+        restart: unless-stopped
+
+
+    boilerplate-api:
+        image: gitlab.bastrucks.com:5050/basworld/boilerplates/api/dev:1.0.0
+        container_name: boilerplate-api
+        ports:
+            - ${NGINX_PORT:-8088}:80
+            - ${NGINX_SSL_PORT:-4445}:443
+        restart: unless-stopped
+        labels:
+            - "traefik.http.routers.http-boilerplate-api.rule=Host(`boilerplate.bas.localhost`)"
+            - "traefik.http.routers.boilerplate-api.entrypoints=websecure"
+            - "traefik.http.routers.boilerplate-api.rule=Host(`boilerplate.bas.localhost`)"
+            - "traefik.http.routers.boilerplate-api.tls=true"
+        networks:
+            - shared_network
+            - boilerplate_api_network
+        volumes:
+            - ./:/var/www/html
+
+networks:
+    shared_network:
+        external: true
+        name: bas_shared_network
+    boilerplate_api_network:
+        driver: bridge
+volumes:
+    mysql_data:
