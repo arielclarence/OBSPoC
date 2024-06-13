@@ -56,50 +56,43 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
-        "security-check": [
-            "vendor/bin/security-checker security:check"
-        ],
-        "update-docs": [
-            "php artisan l5-swagger:generate"
-        ],
-        "unit-test": [
-            "vendor/bin/pest --testsuite=Unit --do-not-cache-result --log-junit ./tests/build/coverage/junit.xml --coverage --min=80 --coverage-html ./tests/build/coverage/html/ --coverage-xml=./tests/build/coverage/coverage-xml --coverage-cobertura ./tests/build/logs/coverage.xml --coverage-text --colors=never | tee unit-coverage.txt"
-        ],
-        "feature-test": [
-            "vendor/bin/pest --testsuite=Feature  -c feature.xml --do-not-cache-result --log-junit ./tests/build/logs/feature-test-report.xml --coverage --min=80 --coverage-cobertura ./tests/build/logs/coverage.cobertura.xml --coverage-text --colors=never | tee feature-coverage.txt"
-        ],
-        "test-phpinsights": [
-            "vendor/bin/phpinsights analyse -s app routes tests"
-        ],
-        "auto-review": [
-            "rector --dry-run"
-        ],
-        "php-lint": [
-            "find . -type f -name '*.php' -not -path \"*/vendor/*\" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v \"No syntax errors detected\" )"
-        ],
-        "code-style-check": [
-            "vendor/bin/pint --test"
-        ],
-        "static-analysis": [
-            "vendor/bin/phpstan analyse app tests"
-        ],
-        "pint" : [
-            "vendor/bin/pint app bootstrap config database routes tests"
-        ],
-        "vulnerability": [
-            "composer audit"
-        ],
+        "unit-test": "vendor/bin/pest --testsuite=Unit --do-not-cache-result --log-junit ./tests/build/coverage/junit.xml --coverage --min=80 --coverage-html ./tests/build/coverage/html/ --coverage-xml=./tests/build/coverage/coverage-xml --coverage-cobertura ./tests/build/logs/coverage.xml --coverage-text --colors=never | tee unit-coverage.txt",
+        "feature-test": "vendor/bin/pest --testsuite=Feature  -c feature.xml --do-not-cache-result --log-junit ./tests/build/logs/feature-test-report.xml --coverage --min=80 --coverage-cobertura ./tests/build/logs/coverage.cobertura.xml --coverage-text --colors=never | tee feature-coverage.txt",
         "mutation-test": [
             "Composer\\Config::disableProcessTimeout",
             "vendor/bin/infection --only-covered -s --debug --coverage=tests/build/coverage --min-msi=50 --test-framework=pest --threads=4"
-        ]
+        ],
+        "test-phpinsights": "vendor/bin/phpinsights analyse -s app routes tests",
+        "php-lint": "find . -type f -name '*.php' -not -path \"*/vendor/*\" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v \"No syntax errors detected\" )",
+        "code-style": "vendor/bin/pint --test",
+        "code-style:fix": "vendor/bin/pint --repair",
+        "auto-review": "rector --dry-run",
+        "auto-review:fix": "rector",
+        "static-analysis": "vendor/bin/phpstan analyse app tests",
+        "security-check": "vendor/bin/security-checker security:check",
+        "generate-api-docs": "php artisan l5-swagger:generate",
+        "pint" : "vendor/bin/pint app bootstrap config database routes tests",
+        "vulnerability": "composer audit"
     },
     "scripts-descriptions": {
+        "post-autoload-dump": "Run Laravel's post-autoload-dump script and discover packages",
+        "post-update-cmd": "Publish Laravel assets after update",
+        "post-root-package-install": "Create .env file if it doesn't exist",
+        "post-create-project-cmd": "Run initial project setup commands",
+        "unit-test": "Run unit tests and generate coverage reports",
+        "feature-test": "Run feature tests and generate coverage reports",
+        "mutation-test": "Run mutation testing using Infection with Pest",
+        "test-phpinsights": "Analyze code quality with PHP Insights",
         "php-lint": "Scan application for linting errors",
-        "code-style-check": "Scan application for code style errors",
+        "code-style": "Scan application for code style errors",
+        "code-style:fix": "Scan application for code style errors and fix where possible",
+        "auto-review": "Run rector and get an automated review on your merge request",
+        "auto-review:fix": "Run rector and auto apply any suggestions",
         "static-analysis": "Scan application for static analysis",
-        "security-check": "Checks for vulnerabilities in the project dependencies",
-        "auto-review": "Run rector and get an automated review on your merge request"
+        "security-check": "Check for vulnerabilities in the project dependencies",
+        "generate-api-docs": "Generate a document containing API documentation",
+        "pint": "Run Pint to check code style in specified directories",
+        "vulnerability": "Run Composer's audit command to check for vulnerabilities"
     },
     "extra": {
         "laravel": {
