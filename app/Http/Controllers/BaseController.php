@@ -7,10 +7,14 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\Info(title="Boilerplate API", version="0.1")
- */
+#[OA\OpenApi(
+    info: new Oa\Info(
+        version: '0.1',
+        title: 'Boilerplate API'
+    )
+)]
 class BaseController extends Controller
 {
     use AuthorizesRequests;
