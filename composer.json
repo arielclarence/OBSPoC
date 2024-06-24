@@ -19,7 +19,7 @@
         "driftingly/rector-laravel": "^1.2",
         "fakerphp/faker": "^1.23",
         "infection/infection": "^0.28.1",
-        "larastan/larastan": "v2.9.7",
+        "larastan/larastan": "^2.9.7",
         "laravel/pint": "^1.15",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
