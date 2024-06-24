@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63a23a12ff34bddb97fe883a74734b09",
+    "content-hash": "d216a66acd3406da7351e3f708d8d359",
     "packages": [
         {
             "name": "bas/log",
