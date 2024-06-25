@@ -155,7 +155,7 @@ return [
                 'ssl' => true,
                 'host' => Host::EuCentral1,
                 'bubble' => true,
-                'level' => Level::fromName(env('LOG_LEVEL')) ?? Level::Info,
+                'level' => Level::fromName(env('LOG_LEVEL', 'info')),
             ],
             'formatter' => LogzIoFormatter::class,
         ],

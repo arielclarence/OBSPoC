@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Validates the logging configuration for each channel that uses the LogzIoHandler.
      *
-     * @throws LogicException If a required key is missing, or if a key value doesn't match the expected value and type.
+     * @throws \LogicException If a required key is missing, or if a key value doesn't match the expected value and type.
      */
     protected function validateLoggingConfiguration(): void
     {
