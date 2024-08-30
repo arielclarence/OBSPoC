@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use BAS\LogzIo\Validators\LogzIoConfigValidator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->validateLoggingConfiguration();
+        Model::shouldBeStrict();
     }
 
     /**
