@@ -6,7 +6,9 @@ namespace App\Providers;
 
 use BAS\LogzIo\Validators\LogzIoConfigValidator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
+use Ramsey\Uuid\Uuid;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->validateLoggingConfiguration();
         Model::shouldBeStrict();
+
+        Http::globalRequestMiddleware(static fn ($request) => $request->withHeader(
+            'X-Transaction-Id',
+            $request->input('X-Transaction-Id') ?? Uuid::uuid4()->toString()
+        ));
+
+        Http::globalResponseMiddleware(static fn ($response) => $response->withHeader('X-Transaction-Id'));
     }
 
     /**

@@ -14,14 +14,13 @@ services:
         networks:
             - boilerplate_api_network
         restart: unless-stopped
-
-
     boilerplate-api:
-        image: gitlab.bastrucks.com:5050/basworld/boilerplates/api/dev:1.0.0
+        build:
+            context: ./docker/application
+            target: dev
         container_name: boilerplate-api
         ports:
-            - ${NGINX_PORT:-8088}:80
-            - ${NGINX_SSL_PORT:-4445}:443
+            - ${NGINX_PORT:-8088}:8080
         restart: unless-stopped
         labels:
             - "traefik.http.routers.http-boilerplate-api.rule=Host(`boilerplate.bas.localhost`)"
@@ -31,14 +30,16 @@ services:
         networks:
             - shared_network
             - boilerplate_api_network
+            - local-net
         volumes:
             - ./:/var/www/html
-
 networks:
     shared_network:
         external: true
         name: bas_shared_network
     boilerplate_api_network:
         driver: bridge
+    local-net:
+        external: true
 volumes:
     mysql_data:

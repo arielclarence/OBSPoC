@@ -9,9 +9,13 @@ include:
     ref: "v1.3.1"
     file: "backend/jobs/mutation-tests.yml"
 
+default:
+  tags:
+    - docker
+
 variables:
   ENABLE_AUTO_REVIEW: "false"
   ALLOW_FAILURE_STATIC_ANALYSIS: "true"
   SERVICE_NAME: "boilerplate-api"
   ECR_REPOSITORY: "976562007428.dkr.ecr.eu-central-1.amazonaws.com"
-  CI_PIPELINE_IMAGE: "gitlab.bastrucks.com:5050/basworld/boilerplates/api/ci:1.0.0"
+  CI_PIPELINE_IMAGE: "gitlab.bastrucks.com:5050/basworld/boilerplates/api/ci:1.1.0"

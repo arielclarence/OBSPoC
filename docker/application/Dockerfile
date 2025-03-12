@@ -1,39 +1,45 @@
-FROM gitlab.bastrucks.com:5050/basworld/templates/dockerfiles/php/8.3-api:3.0.0 AS build
+################################################################################################
+### BASE: things required for all - dev, ci, prod
+################################################################################################
+FROM serversideup/php:8.4-fpm-nginx-alpine-v3.5.1 AS base
 
-# Install dependencies and PHP extensions
-RUN apk add --no-cache zip unzip g++ make autoconf yaml-dev bash libzip-dev linux-headers icu-dev pkgconfig libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql intl xml sockets \
-    && pecl install zip \
-    && docker-php-ext-enable pdo_mysql intl xml zip sockets
+USER root
 
-# Copy entrypoint file
-COPY entrypoint.sh /var/www/
+################################################################################################
+### BUILD: things required for dev & ci
+################################################################################################
+FROM base AS build
 
-ENTRYPOINT []
+RUN install-php-extensions xdebug
+RUN apk add --no-cache mysql-client
 
+################################################################################################
+### CI: specific to ci (if any)
+################################################################################################
 FROM build AS ci
 
-# Composer installation
-COPY --from=composer:2.6.6 /usr/bin/composer /usr/local/bin/composer
+COPY php/xdebug.ini /usr/local/etc/php/conf.d/
+ENV PHP_OPCACHE_ENABLE="1"
 
-# Install development php packages
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+USER www-data
 
-# Copy development ini files
-COPY php/php-development.ini php/xdebug.ini /usr/local/etc/php/conf.d/
+################################################################################################
+### DEV: specific to local (if any)
+################################################################################################
+FROM build AS dev
 
-ENTRYPOINT []
+COPY php/xdebug.ini /usr/local/etc/php/conf.d/
+USER www-data
 
-FROM ci AS dev
+################################################################################################
+### PROD - for deployment
+################################################################################################
+FROM base AS prod
 
-# Copy entrypoint file
-COPY entrypoint.sh /var/www/
+ENV AUTORUN_ENABLED="true" \
+    PHP_OPCACHE_ENABLE="1"
 
-ENTRYPOINT ["/var/www/entrypoint.sh"]
+STOPSIGNAL SIGTERM
+COPY --chmod=755 ./entrypoint.d/ /etc/entrypoint.d/
 
-FROM build AS prod
-
-# Copy entrypoint file
-COPY entrypoint.sh /var/www/
-
-ENTRYPOINT ["/var/www/entrypoint.sh"]
+USER www-data
