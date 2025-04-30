@@ -24,7 +24,7 @@ API Boilerplate is the backend service crafted using Laravel 11 framework.
 ### Cloning the Repository
 
 ```bash
-git clone git@gitlab.bastrucks.com/basworld/boilerplates/api.git boilerplate-api
+git clone git@gitlab.bastrucks.com:basworld/boilerplates/api.git boilerplate-api
 cd boilerplate-api
 ```
 
