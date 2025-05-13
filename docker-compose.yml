@@ -14,6 +14,7 @@ services:
         networks:
             - boilerplate_api_network
         restart: unless-stopped
+
     boilerplate-api:
         build:
             context: ./docker/application
@@ -33,6 +34,54 @@ services:
             - local-net
         volumes:
             - ./:/var/www/html
+
+#    nginx:
+#        image: nginx:alpine
+#        container_name: boilerplate-api-nginx
+#        volumes:
+#            - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+#        ports:
+#            - "8089:8080"
+#        networks:
+#            - boilerplate_api_network
+#
+#    nginx-exporter:
+#        image: nginx/nginx-prometheus-exporter:latest
+#        container_name: nginx-exporter
+#        command: [ "-nginx.scrape-uri=http://nginx/stub_status" ]
+#        expose:
+#            - "9113"
+#        networks:
+#            - boilerplate_api_network
+#
+#    php-fpm-exporter:
+#        image: ghcr.io/hipages/php-fpm_exporter:2
+#        container_name: php-fpm-exporter
+#        environment:
+#            PHP_FPM_SCRAPE_URI: tcp://boilerplate-api:9000/status
+#        networks:
+#            - boilerplate_api_network
+
+    cloudwatch-agent:
+        image: amazon/cloudwatch-agent:latest
+        container_name: cloudwatch-agent
+        environment:
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_REGION=${AWS_DEFAULT_REGION}
+#            - AWS_PROFILE=profile
+#            - AWS_SDK_LOAD_CONFIG=1
+        volumes:
+            - ./cloudwatch/metric-collect.json:/opt/aws/amazon-cloudwatch-agent/bin/default_linux_config.json:ro
+            - ./cloudwatch/prometheus.yaml:/opt/aws/amazon-cloudwatch-agent/etc/prometheus.yaml:ro
+            - ./cloudwatch/logs:/opt/aws/amazon-cloudwatch-agent/logs
+#            - ./cloudwatch/credentials:/root/.aws/credentials:ro
+#            - ./cloudwatch/config:/root/.aws/config:ro
+#            - ./cloudwatch/cloudwatch-config.conf:/etc/cloudwatch-agent/config.json:ro
+        networks:
+            - boilerplate_api_network
+        restart: unless-stopped
+
 networks:
     shared_network:
         external: true
@@ -41,5 +90,7 @@ networks:
         driver: bridge
     local-net:
         external: true
+
 volumes:
     mysql_data:
+

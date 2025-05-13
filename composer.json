@@ -10,7 +10,8 @@
         "bas/logzio": "^1.3",
         "darkaonline/l5-swagger": "^9.0",
         "laravel/framework": "^12.0",
-        "sentry/sentry-laravel": "^4.13"
+        "sentry/sentry-laravel": "^4.13",
+        "spatie/laravel-prometheus": "^1.2"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.0",

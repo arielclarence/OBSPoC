@@ -1,0 +1,7 @@
+[default]
+region = eu-central-1
+output = json
+
+[AmazonCloudWatchAgent]
+region = eu-central-1
+output = json
