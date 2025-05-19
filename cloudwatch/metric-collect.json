@@ -1,0 +1,41 @@
+{
+    "agent": {
+        "metrics_collection_interval": 60,
+        "debug": true,
+        "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
+    },
+    "logs": {
+        "metrics_collected": {
+            "prometheus": {
+                "cluster_name": "laravel-bas-localhost",
+                "log_group_name": "my-log-group",
+                "prometheus_config_path": "/opt/aws/amazon-cloudwatch-agent/etc/prometheus.yaml",
+                "emf_processor": {
+                    "metric_declaration_dedup": true,
+                    "metric_namespace": "MyLocalMetrics",
+                    "metric_declaration": [
+                        {
+                            "source_labels": ["job", "service"],
+                            "label_matcher": ".*",
+                            "dimensions": [["job"], ["service"], ["job", "service"]],
+                            "metric_selectors": [
+                                "^laravel_.*"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
+                        "log_group_name": "/aws/cloudwatch-agent",
+                        "log_stream_name": "{instance_id}-cwagent-log"
+                    }
+                ]
+            }
+        }
+    }
+}

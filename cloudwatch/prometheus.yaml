@@ -1,0 +1,32 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'laravel'
+    sample_limit: 10000
+    metrics_path: /metrics/laravel
+    static_configs:
+      - targets: [ 'boilerplate-api:8080' ]
+        labels:
+          job: 'laravel'
+          service: 'laravel-app'
+
+  - job_name: 'nginx'
+    sample_limit: 10000
+    metrics_path: /metrics/nginx
+    static_configs:
+      - targets: [ 'boilerplate-api:8080' ]
+        labels:
+          job: 'nginx'
+          service: 'nginx'
+
+  - job_name: 'php-fpm'
+    sample_limit: 10000
+    metrics_path: /metrics/php-fpm
+    static_configs:
+      - targets: [ 'boilerplate-api:8080' ]
+        labels:
+          job: 'php-fpm'
+          service: 'php-fpm'
+
+

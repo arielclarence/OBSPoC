@@ -14,6 +14,7 @@ services:
         networks:
             - boilerplate_api_network
         restart: unless-stopped
+
     boilerplate-api:
         build:
             context: ./docker/application
@@ -33,6 +34,41 @@ services:
             - local-net
         volumes:
             - ./:/var/www/html
+            - ./nginx/nginx.conf:/etc/nginx/server-opts.d/nginx.conf
+            - ./php-fpm/php-fpm_status.conf:/usr/local/etc/php-fpm.d/status.conf
+
+    nginx-exporter:
+        image: nginx/nginx-prometheus-exporter:latest
+        command:
+            - -nginx.scrape-uri=http://boilerplate-api:8080/nginx_status
+        networks:
+            - boilerplate_api_network
+
+    php-fpm-exporter:
+        image: ghcr.io/hipages/php-fpm_exporter:2
+        container_name: php-fpm-exporter
+        environment:
+            PHP_FPM_SCRAPE_URI: tcp://boilerplate-api:9000/php-fpm_status
+        networks:
+            - boilerplate_api_network
+
+    cloudwatch-agent:
+        image: amazon/cloudwatch-agent:latest
+        container_name: cloudwatch-agent
+        environment:
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_REGION=${AWS_DEFAULT_REGION}
+        volumes:
+            - ./cloudwatch/metric-collect.json:/opt/aws/amazon-cloudwatch-agent/bin/default_linux_config.json:ro
+            - ./cloudwatch/prometheus.yaml:/opt/aws/amazon-cloudwatch-agent/etc/prometheus.yaml:ro
+            - ./cloudwatch/logs:/opt/aws/amazon-cloudwatch-agent/logs
+            - ./cloudwatch/credentials:/root/.aws/credentials:ro
+        networks:
+            - boilerplate_api_network
+        restart: unless-stopped
+
+
 networks:
     shared_network:
         external: true
@@ -41,5 +77,8 @@ networks:
         driver: bridge
     local-net:
         external: true
+
 volumes:
     mysql_data:
+
+
