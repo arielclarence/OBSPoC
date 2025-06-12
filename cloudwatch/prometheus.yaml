@@ -9,7 +9,7 @@ scrape_configs:
       - targets: [ 'boilerplate-api:8080' ]
         labels:
           job: 'laravel'
-          service: 'laravel-app'
+          service: 'PoC App'
 
   - job_name: 'nginx'
     sample_limit: 10000
@@ -18,7 +18,7 @@ scrape_configs:
       - targets: [ 'boilerplate-api:8080' ]
         labels:
           job: 'nginx'
-          service: 'nginx'
+          service: 'PoC App'
 
   - job_name: 'php-fpm'
     sample_limit: 10000
@@ -27,6 +27,6 @@ scrape_configs:
       - targets: [ 'boilerplate-api:8080' ]
         labels:
           job: 'php-fpm'
-          service: 'php-fpm'
+          service: 'PoC App'
 
 

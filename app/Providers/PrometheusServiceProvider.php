@@ -12,37 +12,36 @@ use Spatie\Prometheus\Collectors\Horizon\HorizonStatusCollector;
 use Spatie\Prometheus\Collectors\Horizon\JobsPerMinuteCollector;
 use Spatie\Prometheus\Collectors\Horizon\RecentJobsCollector;
 use Spatie\Prometheus\Facades\Prometheus;
+use Illuminate\Support\Facades\Queue;
 
 class PrometheusServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        /*
-         * Here you can register all the exporters that you
-         * want to export to prometheus
-         */
-        Prometheus::addGauge('My gauge')
-            ->value(function() {
-                return 123.45;
-            });
-        Prometheus::addGauge('Laravel memory usage')
+        // Register counters for HTTP request metrics, matching your middleware labels
+        Prometheus::addGauge('laravel_memory_usage')
             ->helpText('Current memory usage of the Laravel process in bytes')
             ->value(fn() => memory_get_usage(true));
 
-        Prometheus::addGauge('random_test_value')
-            ->helpText('A random value to test Prometheus metrics')
-            ->value(fn() => rand(1, 1000));
+        Prometheus::addGauge('laravel_cpu_usage_percent')
+            ->helpText('CPU usage percent by Laravel process')
+            ->value(function() {
+                $pid = getmypid();
+                $cpu = shell_exec("ps -p $pid -o %cpu | tail -n 1");
+                return floatval(trim($cpu));
+            });
+
+//        Prometheus::addGauge('queue_pending_jobs')
+//            ->helpText('Number of jobs waiting in the queue')
+//            ->value(fn() => Queue::size('default'));
 
         Prometheus::addGauge('current_unix_timestamp')
             ->helpText('The current Unix timestamp')
             ->value(fn() => time());
-        /*
-         * Uncomment this line if you want to export
-         * all Horizon metrics to prometheus
-         */
-//         $this->registerHorizonCollectors();
-    }
 
+        // Uncomment if using Horizon
+        // $this->registerHorizonCollectors();
+    }
     public function registerHorizonCollectors(): self
     {
         Prometheus::registerCollectorClasses([

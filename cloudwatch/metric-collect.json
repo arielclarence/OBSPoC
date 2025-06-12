@@ -17,9 +17,12 @@
                         {
                             "source_labels": ["job", "service"],
                             "label_matcher": ".*",
-                            "dimensions": [["job"], ["service"], ["job", "service"]],
+                            "dimensions": [["job", "service"]],
                             "metric_selectors": [
-                                "^laravel_.*"
+                                "^app_laravel_.*",
+                                "^phpfpm_.*",
+                                "^nginx_.*",
+                                "^process_.*"
                             ]
                         }
                     ]

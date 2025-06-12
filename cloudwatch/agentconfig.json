@@ -17,7 +17,7 @@
                         {
                             "source_labels": ["job", "service"],
                             "label_matcher": ".*",
-                            "dimensions": [["job"], ["service"], ["job", "service"]],
+                            "dimensions": [["job", "service"]],
                             "metric_selectors": [
                                 "^nginx_.*",
                                 "^phpfpm_.*",
